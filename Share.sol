@@ -821,7 +821,7 @@ pragma solidity 0.6.12;
 
 
 
-contract SHARE is ERC20Burnable, Operator {
+contract Share is ERC20Burnable, Operator {
     using SafeMath for uint256;
 
     // TOTAL MAX SUPPLY = 70,000 tSHAREs
@@ -840,8 +840,10 @@ contract SHARE is ERC20Burnable, Operator {
 
     bool public rewardPoolDistributed = false;
 
+    bool internal isintialSupplyVested = false;
+
     constructor(uint256 _startTime, address _daoFund) public ERC20("SHARE", "SHARE") {
-        _mint(msg.sender, 3000 ether);
+        _mint(msg.sender, 1 ether);
 
         startTime = _startTime;
         endTime = startTime + VESTING_DURATION;
@@ -859,6 +861,13 @@ contract SHARE is ERC20Burnable, Operator {
         require(msg.sender == daoFund, "!dao");
         require(_daoFund != address(0), "zero");
         daoFund = _daoFund;
+    }
+
+    function intialSupplyMintedToVested(address _walletVested) external onlyOperator
+    {
+        require(_walletVested != address(0), "zero");
+        require(!isintialSupplyVested, "initial supply already minted");
+        _mint(_walletVested, 3000 ether);
     }
 
     function unclaimedDaoFund() public view returns (uint256 _pending) {

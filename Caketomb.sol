@@ -1038,9 +1038,9 @@ contract Caketomb is ERC20Burnable, Operator {
     using SafeMath for uint256;
 
     // Initial distribution for the 3 days genesis pools
-    uint256 public constant INITIAL_GENESIS_POOL_DISTRIBUTION = 15000 ether;
+    uint256 public constant INITIAL_GENESIS_POOL_DISTRIBUTION = 50000 ether;
     // Initial distribution CAKETOMB-BNB LP
-    uint256 public constant INITIAL_CAKETOMB_POOL_DISTRIBUTION = 35000 ether;
+    //uint256 public constant INITIAL_CAKETOMB_POOL_DISTRIBUTION = 30000 ether;
 
     // Have the rewards been distributed to the pools
     bool public rewardPoolDistributed = false;
@@ -1083,7 +1083,7 @@ contract Caketomb is ERC20Burnable, Operator {
     /**
      * @notice Constructs the caketomb ERC-20 contract.
      */
-    constructor(uint256 _taxRate, address _taxCollectorAddress) public ERC20("caketomb", "CAKETOMB") {
+    constructor(uint256 _taxRate, address _taxCollectorAddress) public ERC20("CAKETOMB", "CAKETOMB") {
         // Mints 1 CAKETOMB to contract creator for initial pool setup
         require(_taxRate < 10000, "tax equal or bigger to 100%");
         require(_taxCollectorAddress != address(0), "tax collector address must be non-zero address");
@@ -1270,15 +1270,12 @@ contract Caketomb is ERC20Burnable, Operator {
      * @notice distribute to reward pool (only once)
      */
     function distributeReward(
-        address _genesisPool,
-        address _caketombPool
+        address _genesisPool
     ) external onlyOperator {
         require(!rewardPoolDistributed, "only can distribute once");
         require(_genesisPool != address(0), "!_genesisPool");
-        require(_caketombPool != address(0), "!_caketombPool");
         rewardPoolDistributed = true;
         _mint(_genesisPool, INITIAL_GENESIS_POOL_DISTRIBUTION);
-        _mint(_caketombPool, INITIAL_CAKETOMB_POOL_DISTRIBUTION);
     }
 
     function governanceRecoverUnsupported(
